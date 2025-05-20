@@ -220,21 +220,22 @@
     }
     .falling-icon {
       position: fixed;
-      font-size: 3rem; /* 2x normal size (1.5rem * 2 = 3rem) */
+      font-size: 3rem;
       user-select: none;
       will-change: transform;
       opacity: 0.85;
       text-shadow:
         0 0 3px rgba(0,0,0,0.3),
         0 0 5px rgba(255,255,255,0.6);
-      color: #fff;
+      color: #facc15;
       pointer-events: none;
+      filter: drop-shadow(0 0 3px rgba(250, 204, 21, 0.7));
     }
     /* Large category titles style */
     h2 {
       font-style: italic;
       font-weight: 700;
-      font-size: 2.25rem; /* text-4xl approx */
+      font-size: 2.25rem;
       letter-spacing: 0.03em;
       color: #e0e0e0;
       text-shadow:
@@ -244,7 +245,6 @@
         2px 2px 0 #000,
         0 0 8px #000;
     }
-    /* Updated h1 style for requested text */
     header h1 {
       font-style: italic;
       font-weight: 700;
@@ -252,7 +252,10 @@
       letter-spacing: 0.04em;
       font-weight: 800;
       color: #e0e0e0;
-      white-space: nowrap;
+      white-space: normal;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
       text-shadow:
         -2px -2px 0 #000,
         2px -2px 0 #000,
@@ -260,19 +263,20 @@
         2px 2px 0 #000,
         0 0 8px #000;
       text-align: center;
-      margin-left: auto;
-      margin-right: auto;
+      line-height: 1.2;
     }
     @media (min-width: 640px) {
       header h1 {
         font-size: 2.75rem;
       }
     }
-    /* The single line bold note below h1 */
     header p.note {
       font-weight: 700;
       font-size: 1rem;
-      white-space: nowrap;
+      white-space: normal;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
       margin-top: 0.25rem;
       color: #ccc;
       text-shadow:
@@ -282,10 +286,8 @@
         2px 2px 0 #000,
         0 0 8px #000;
       text-align: center;
-      margin-left: auto;
-      margin-right: auto;
+      line-height: 1.2;
     }
-    /* Footer style */
     footer {
       max-width: 80rem;
       margin: 0 auto 1rem auto;
@@ -303,14 +305,14 @@
         2px 2px 0 #000,
         0 0 8px #000;
       flex-shrink: 0;
+      position: relative;
     }
-    /* Contact button style */
     #contactButton {
       position: fixed;
-      bottom: 1.5rem;
+      bottom: 4.5rem;
       right: 1.5rem;
       background-color: #000000;
-      color: #10b981; /* Tailwind emerald-500 */
+      color: #10b981;
       width: 4.5rem;
       height: 4.5rem;
       border-radius: 9999px;
@@ -350,7 +352,6 @@
       color: #bbb;
       border-color: #444;
     }
-    /* FPS counter style */
     #fpsCounter {
       position: fixed;
       top: 1rem;
@@ -604,7 +605,10 @@
   </main>
 
   <footer>
-    <div id="visitorUptime" aria-live="polite" aria-atomic="true" role="contentinfo">
+    <a href="http://zalo.me/0989925208" target="_blank" rel="noopener noreferrer" id="contactButton" aria-label="Liên hệ Zalo" title="Liên hệ Zalo">
+      📲
+    </a>
+    <div id="visitorUptime" aria-live="polite" aria-atomic="true" role="contentinfo" class="mt-12">
       <span id="visitorCount">Lượt truy cập: 0</span>
       <span id="uptime" class="ml-4">Thời gian chạy: 00:00:00</span>
     </div>
@@ -613,15 +617,11 @@
     </div>
   </footer>
 
-  <a href="http://zalo.me/0989925208" target="_blank" rel="noopener noreferrer" id="contactButton" aria-label="Liên hệ Zalo" title="Liên hệ Zalo">
-    📲
-  </a>
-
   <audio id="audioPlayer" src="https://files.catbox.moe/b15lkq.mp3" preload="auto"></audio>
 
   <script>
     (() => {
-      const icons = ['❄️','✅','🌸','😝','🍕','🥖','🍠','🍪','🧊','🌼','🍂','🍁','🍃'];
+      const icons = ['🍂', '🍁', '🍃', '🍂', '🍁', '🍃', '🍂', '🍁', '🍃', '🍂', '🍁', '🍃', '🍂', '🍁', '🍃', '🍂', '🍁', '🍃', '🍂', '🍁', '🍃', '🍂', '🍁', '🍃', '🍂'];
       const container = document.getElementById('fallingIcons');
       const maxIcons = 25;
 
@@ -629,14 +629,13 @@
         return Math.random() * (max - min) + min;
       }
 
-      // We'll store each icon's state for smooth animation
       const fallingIcons = [];
 
       function createIcon(index) {
         const span = document.createElement('span');
         span.classList.add('falling-icon');
         span.textContent = icons[index % icons.length];
-        span.style.fontSize = `${random(2, 3.5)}rem`;
+        span.style.fontSize = `${random(1.5, 3)}rem`;
         span.style.left = `${random(0, 100)}vw`;
         span.style.opacity = 0.85;
         span.style.willChange = 'transform';
@@ -644,9 +643,9 @@
 
         return {
           element: span,
-          x: parseFloat(span.style.left),
-          y: random(-10, 0),
-          speed: random(30, 80), // pixels per second
+          x: (random(0, 100) / 100) * window.innerWidth,
+          y: random(-window.innerHeight, 0),
+          speed: random(20, 60), // pixels per second
           swayAmplitude: random(10, 30), // px horizontal sway amplitude
           swayFrequency: random(0.5, 1.5), // sway cycles per second
           swayPhase: random(0, 2 * Math.PI),
@@ -671,18 +670,18 @@
           icon.y += icon.speed * delta;
           if (icon.y > viewportHeight + icon.size * 16) {
             icon.y = -icon.size * 16;
-            icon.x = random(0, 100);
-            icon.speed = random(30, 80);
+            icon.x = (random(0, 100) / 100) * window.innerWidth;
+            icon.speed = random(20, 60);
             icon.swayAmplitude = random(10, 30);
             icon.swayFrequency = random(0.5, 1.5);
             icon.swayPhase = random(0, 2 * Math.PI);
-            icon.size = random(2, 3.5);
+            icon.size = random(1.5, 3);
             icon.element.style.fontSize = `${icon.size}rem`;
             icon.element.style.opacity = 0.85;
           }
           const swayX = icon.swayAmplitude * Math.sin(2 * Math.PI * icon.swayFrequency * (timestamp / 1000) + icon.swayPhase);
-          const leftPx = (icon.x / 100) * window.innerWidth + swayX;
-          icon.element.style.transform = `translate(${leftPx}px, ${icon.y}px)`;
+          const leftPx = icon.x + swayX;
+          icon.element.style.transform = `translate(${leftPx}px, ${icon.y}px) rotate(${swayX * 2}deg)`;
         });
 
         requestAnimationFrame(animate);
