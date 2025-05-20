@@ -227,23 +227,8 @@
       text-shadow:
         0 0 3px rgba(0,0,0,0.3),
         0 0 5px rgba(255,255,255,0.6);
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
-      animation-name: fall;
       color: #fff;
-    }
-    @keyframes fall {
-      0% {
-        transform: translateY(-4rem) rotate(0deg);
-        opacity: 0;
-      }
-      10% {
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(110vh) rotate(360deg);
-        opacity: 0.9;
-      }
+      pointer-events: none;
     }
     /* Large category titles style */
     h2 {
@@ -263,7 +248,7 @@
     header h1 {
       font-style: italic;
       font-weight: 700;
-      font-size: 2rem;
+      font-size: 1.5rem;
       letter-spacing: 0.04em;
       font-weight: 800;
       color: #e0e0e0;
@@ -274,6 +259,9 @@
         -2px 2px 0 #000,
         2px 2px 0 #000,
         0 0 8px #000;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
     }
     @media (min-width: 640px) {
       header h1 {
@@ -283,7 +271,7 @@
     /* The single line bold note below h1 */
     header p.note {
       font-weight: 700;
-      font-size: 1.125rem; /* text-lg */
+      font-size: 1rem;
       white-space: nowrap;
       margin-top: 0.25rem;
       color: #ccc;
@@ -293,6 +281,9 @@
         -2px 2px 0 #000,
         2px 2px 0 #000,
         0 0 8px #000;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
     }
     /* Footer style */
     footer {
@@ -359,6 +350,47 @@
       color: #bbb;
       border-color: #444;
     }
+    /* FPS counter style */
+    #fpsCounter {
+      position: fixed;
+      top: 1rem;
+      right: 50%;
+      transform: translateX(50%);
+      z-index: 10003;
+      background-color: rgba(34, 34, 34, 0.8);
+      color: #10b981;
+      font-weight: 700;
+      font-family: monospace;
+      padding: 0.3rem 0.6rem;
+      border-radius: 0.375rem;
+      box-shadow:
+        0 0 6px #10b981,
+        0 0 12px #10b981;
+      user-select: none;
+      text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+      font-size: 1rem;
+      min-width: 60px;
+      text-align: center;
+      max-width: 80vw;
+      white-space: nowrap;
+    }
+    @media (max-width: 480px) {
+      #fpsCounter {
+        font-size: 0.875rem;
+        padding: 0.25rem 0.5rem;
+        min-width: 50px;
+      }
+      header h1 {
+        font-size: 1.25rem;
+      }
+      header p.note {
+        font-size: 0.875rem;
+      }
+    }
   </style>
 </head>
 <body class="bg-black text-gray-200 min-h-screen transition-colors duration-300">
@@ -369,7 +401,7 @@
     🎵
   </button>
 
-  <div id="fpsCounter" aria-live="polite" aria-atomic="true" role="status">FPS:85 --</div>
+  <div id="fpsCounter" aria-live="polite" aria-atomic="true" role="status">FPS: --</div>
 
   <div id="fallingIcons" aria-hidden="true"></div>
 
@@ -379,7 +411,6 @@
   </header>
 
   <main class="max-w-5xl mx-auto px-4 pb-16 space-y-10">
-    <!-- Section: Cày Beli -->
     <section class="rounded-lg p-6 shadow-sm">
       <div class="glow-triangle"></div>
       <div class="glow-square"></div>
@@ -390,7 +421,6 @@
       </div>
     </section>
 
-    <!-- Section: Cày Mastery -->
     <section class="rounded-lg p-6 shadow-sm">
       <div class="glow-triangle"></div>
       <div class="glow-square"></div>
@@ -440,7 +470,6 @@
       </div>
     </section>
 
-    <!-- Section: Cày Fragment -->
     <section class="rounded-lg p-6 shadow-sm">
       <div class="glow-triangle"></div>
       <div class="glow-square"></div>
@@ -458,7 +487,6 @@
       </div>
     </section>
 
-    <!-- Section: Lấy Kiếm & Melee -->
     <section class="rounded-lg p-6 shadow-sm">
       <div class="glow-triangle"></div>
       <div class="glow-square"></div>
@@ -508,7 +536,6 @@
       </div>
     </section>
 
-    <!-- Section: Tộc Rồng + V4 -->
     <section class="rounded-lg p-6 shadow-sm">
       <div class="glow-triangle"></div>
       <div class="glow-square"></div>
@@ -538,7 +565,6 @@
       </div>
     </section>
 
-    <!-- Section: Dịch Vụ Liên Quan -->
     <section class="rounded-lg p-6 shadow-sm">
       <div class="glow-triangle"></div>
       <div class="glow-square"></div>
@@ -580,7 +606,7 @@
   <footer>
     <div id="visitorUptime" aria-live="polite" aria-atomic="true" role="contentinfo">
       <span id="visitorCount">Lượt truy cập: 0</span>
-      <span id="uptime">Thời gian chạy: 00:00:00</span>
+      <span id="uptime" class="ml-4">Thời gian chạy: 00:00:00</span>
     </div>
     <div style="font-size: 0.875rem; font-style: italic; color: #ccc; margin-top: 0.5rem;">
       Copyright ©ByNgĐức - Cảm Ơn Đã Sử Dụng Dịch Vụ ❤️🌸✅
@@ -597,34 +623,75 @@
     (() => {
       const icons = ['❄️','✅','🌸','😝','🍕','🥖','🍠','🍪','🧊','🌼','🍂','🍁','🍃'];
       const container = document.getElementById('fallingIcons');
-      const maxIcons = 25; // fewer icons
+      const maxIcons = 25;
 
       function random(min, max) {
         return Math.random() * (max - min) + min;
       }
 
+      // We'll store each icon's state for smooth animation
+      const fallingIcons = [];
+
       function createIcon(index) {
         const span = document.createElement('span');
         span.classList.add('falling-icon');
-        span.style.left = `${random(0, 100)}vw`;
-        // Faster fall: duration between 5s and 9s (was 8-15)
-        span.style.animationDuration = `${random(5, 9)}s`;
-        span.style.animationDelay = `${random(0, 9)}s`;
-        span.style.zIndex = 9998;
         span.textContent = icons[index % icons.length];
-        return span;
+        span.style.fontSize = `${random(2, 3.5)}rem`;
+        span.style.left = `${random(0, 100)}vw`;
+        span.style.opacity = 0.85;
+        span.style.willChange = 'transform';
+        container.appendChild(span);
+
+        return {
+          element: span,
+          x: parseFloat(span.style.left),
+          y: random(-10, 0),
+          speed: random(30, 80), // pixels per second
+          swayAmplitude: random(10, 30), // px horizontal sway amplitude
+          swayFrequency: random(0.5, 1.5), // sway cycles per second
+          swayPhase: random(0, 2 * Math.PI),
+          size: parseFloat(span.style.fontSize),
+        };
       }
 
       for(let i=0; i<maxIcons; i++) {
-        const icon = createIcon(i);
-        container.appendChild(icon);
+        fallingIcons.push(createIcon(i));
       }
 
-      // Theme toggle
+      let lastTimestamp = null;
+
+      function animate(timestamp) {
+        if (!lastTimestamp) lastTimestamp = timestamp;
+        const delta = (timestamp - lastTimestamp) / 1000; // seconds
+        lastTimestamp = timestamp;
+
+        const viewportHeight = window.innerHeight;
+
+        fallingIcons.forEach(icon => {
+          icon.y += icon.speed * delta;
+          if (icon.y > viewportHeight + icon.size * 16) {
+            icon.y = -icon.size * 16;
+            icon.x = random(0, 100);
+            icon.speed = random(30, 80);
+            icon.swayAmplitude = random(10, 30);
+            icon.swayFrequency = random(0.5, 1.5);
+            icon.swayPhase = random(0, 2 * Math.PI);
+            icon.size = random(2, 3.5);
+            icon.element.style.fontSize = `${icon.size}rem`;
+            icon.element.style.opacity = 0.85;
+          }
+          const swayX = icon.swayAmplitude * Math.sin(2 * Math.PI * icon.swayFrequency * (timestamp / 1000) + icon.swayPhase);
+          const leftPx = (icon.x / 100) * window.innerWidth + swayX;
+          icon.element.style.transform = `translate(${leftPx}px, ${icon.y}px)`;
+        });
+
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+
       const toggleBtn = document.getElementById('toggleThemeBtn');
       const htmlEl = document.documentElement;
 
-      // Load saved theme from localStorage
       if(localStorage.getItem('theme') === 'dark') {
         htmlEl.classList.add('dark');
       }
@@ -638,7 +705,6 @@
         }
       });
 
-      // Music button toggle
       const musicBtn = document.getElementById('musicBtn');
       const audioPlayer = document.getElementById('audioPlayer');
 
@@ -654,16 +720,13 @@
         }
       });
 
-      // Pause audio when page unloads
       window.addEventListener('beforeunload', () => {
         audioPlayer.pause();
       });
 
-      // Visitor count and uptime
       const visitorCountEl = document.getElementById('visitorCount');
       const uptimeEl = document.getElementById('uptime');
 
-      // Visitor count stored in localStorage
       let visitorCount = localStorage.getItem('visitorCount');
       if (!visitorCount) {
         visitorCount = 0;
@@ -672,7 +735,6 @@
       localStorage.setItem('visitorCount', visitorCount);
       visitorCountEl.textContent = `Lượt truy cập: ${visitorCount.toLocaleString()}`;
 
-      // Uptime calculation
       let startTime = localStorage.getItem('startTime');
       if (!startTime) {
         startTime = Date.now();
@@ -701,7 +763,26 @@
 
       updateUptime();
       setInterval(updateUptime, 1000);
+
+      // FPS counter implementation
+      const fpsCounter = document.getElementById('fpsCounter');
+      let lastFrameTime = performance.now();
+      let frameCount = 0;
+      let fps = 0;
+
+      function updateFPS() {
+        const now = performance.now();
+        frameCount++;
+        if (now - lastFrameTime >= 1000) {
+          fps = frameCount;
+          frameCount = 0;
+          lastFrameTime = now;
+          fpsCounter.textContent = `FPS: ${fps}`;
+        }
+        requestAnimationFrame(updateFPS);
+      }
+      requestAnimationFrame(updateFPS);
     })();
   </script>
-</body>
+</body> 
 </html>
