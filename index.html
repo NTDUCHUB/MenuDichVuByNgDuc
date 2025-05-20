@@ -1,0 +1,707 @@
+<html lang="vi" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cày Beli - Bảng Giá Dịch Vụ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+      background-color: #000000;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Dark mode styles */
+    .dark body {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+    .dark header {
+      color: #e0e0e0;
+    }
+    .dark .note-section {
+      background-color: #330000;
+      border-color: #aa4444;
+      color: #ffb3b3;
+    }
+    /* Border glow with moving shapes */
+    section {
+      position: relative;
+      background-color: #111111;
+      color: #e0e0e0;
+      padding: 1.5rem 1.5rem;
+      border-radius: 0.5rem;
+      margin-bottom: 2.5rem;
+      overflow: visible;
+      z-index: 0;
+      border: 1.5px solid #10b981;
+      box-shadow:
+        0 0 4px #10b981,
+        0 0 10px #10b981,
+        0 0 15px #10b981;
+    }
+    /* Moving shapes container */
+    /* Triangle shape - 1st */
+    section .glow-triangle {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-bottom: 12px solid #ef4444; /* red-500 */
+      filter: drop-shadow(0 0 6px #ef4444);
+      animation: moveTriangle 3s linear infinite;
+      top: -6px;
+      left: -6px;
+      z-index: 11;
+    }
+    /* Square shape - 2nd */
+    section .glow-square {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #facc15; /* yellow-400 */
+      box-shadow:
+        0 0 6px #facc15,
+        0 0 12px #facc15,
+        0 0 16px #facc15;
+      animation: moveSquare 3.5s linear infinite;
+      top: -6px;
+      left: -6px;
+      z-index: 11;
+    }
+    /* Circle shape - 3rd */
+    section .glow-circle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow:
+        0 0 6px #10b981,
+        0 0 12px #10b981,
+        0 0 16px #10b981;
+      animation: moveCircle 4s linear infinite;
+      top: -5px;
+      left: -5px;
+      z-index: 11;
+    }
+    /* Animations for shapes moving around border */
+    @keyframes moveTriangle {
+      0%   { top: -6px; left: -6px; }
+      12.5% { top: -6px; left: calc(100% - 14px); }
+      25%  { top: -6px; left: calc(100% - 14px); }
+      37.5% { top: calc(100% - 12px); left: calc(100% - 14px); }
+      50%  { top: calc(100% - 12px); left: calc(100% - 14px); }
+      62.5% { top: calc(100% - 12px); left: -6px; }
+      75%  { top: calc(100% - 12px); left: -6px; }
+      87.5% { top: -6px; left: -6px; }
+      100% { top: -6px; left: -6px; }
+    }
+    @keyframes moveSquare {
+      0%   { top: calc(100% - 12px); left: -6px; }
+      12.5% { top: calc(100% - 12px); left: calc(100% - 12px); }
+      25%  { top: calc(100% - 12px); left: calc(100% - 12px); }
+      37.5% { top: -6px; left: calc(100% - 12px); }
+      50%  { top: -6px; left: calc(100% - 12px); }
+      62.5% { top: -6px; left: -6px; }
+      75%  { top: -6px; left: -6px; }
+      87.5% { top: calc(100% - 12px); left: -6px; }
+      100% { top: calc(100% - 12px); left: -6px; }
+    }
+    @keyframes moveCircle {
+      0%   { top: -5px; left: -5px; }
+      12.5% { top: -5px; left: calc(100% - 10px); }
+      25%  { top: -5px; left: calc(100% - 10px); }
+      37.5% { top: calc(100% - 10px); left: calc(100% - 10px); }
+      50%  { top: calc(100% - 10px); left: calc(100% - 10px); }
+      62.5% { top: calc(100% - 10px); left: -5px; }
+      75%  { top: calc(100% - 10px); left: -5px; }
+      87.5% { top: -5px; left: -5px; }
+      100% { top: -5px; left: -5px; }
+    }
+    /* Inner content to be above the border effect */
+    section > * {
+      position: relative;
+      z-index: 1;
+    }
+    /* Gear button */
+    #toggleThemeBtn {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 10002;
+      background-color: #222222;
+      border: 2px solid #555;
+      border-radius: 0.5rem;
+      padding: 0.4rem 0.5rem;
+      cursor: pointer;
+      box-shadow: 0 0 6px rgb(255 255 255 / 0.2);
+      transition: background-color 0.3s, border-color 0.3s;
+      color: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.8rem;
+      height: 2.8rem;
+      text-shadow:
+        -2px -2px 0 #000,
+        2px -2px 0 #000,
+        -2px 2px 0 #000,
+        2px 2px 0 #000,
+        0 0 8px #000;
+    }
+    #toggleThemeBtn i {
+      font-size: 1.5rem;
+      pointer-events: none;
+    }
+    /* Music button */
+    #musicBtn {
+      position: fixed;
+      top: 1rem;
+      left: 4.2rem;
+      z-index: 10002;
+      background-color: #222222;
+      border: 2px solid #555;
+      border-radius: 0.5rem;
+      padding: 0.4rem 0.5rem;
+      cursor: pointer;
+      box-shadow: 0 0 6px rgb(255 255 255 / 0.2);
+      transition: background-color 0.3s, border-color 0.3s;
+      color: #10b981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.8rem;
+      height: 2.8rem;
+      font-size: 1.8rem;
+      user-select: none;
+      text-shadow:
+        -2px -2px 0 #000,
+        2px -2px 0 #000,
+        -2px 2px 0 #000,
+        2px 2px 0 #000,
+        0 0 8px #000;
+    }
+    #musicBtn.playing {
+      color: #34d399;
+      box-shadow: 0 0 10px #34d399;
+      border-color: #34d399;
+      background-color: #111;
+    }
+    #musicBtn:hover {
+      background-color: #111;
+      border-color: #34d399;
+      color: #34d399;
+      box-shadow: 0 0 10px #34d399;
+    }
+    /* Falling icons container */
+    #fallingIcons {
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: visible;
+      z-index: 9998;
+      display: block;
+    }
+    .falling-icon {
+      position: fixed;
+      font-size: 3rem; /* 2x normal size (1.5rem * 2 = 3rem) */
+      user-select: none;
+      will-change: transform;
+      opacity: 0.85;
+      text-shadow:
+        0 0 3px rgba(0,0,0,0.3),
+        0 0 5px rgba(255,255,255,0.6);
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      animation-name: fall;
+      color: #fff;
+    }
+    @keyframes fall {
+      0% {
+        transform: translateY(-4rem) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0.9;
+      }
+    }
+    /* Large category titles style */
+    h2 {
+      font-style: italic;
+      font-weight: 700;
+      font-size: 2.25rem; /* text-4xl approx */
+      letter-spacing: 0.03em;
+      color: #e0e0e0;
+      text-shadow:
+        -2px -2px 0 #000,
+        2px -2px 0 #000,
+        -2px 2px 0 #000,
+        2px 2px 0 #000,
+        0 0 8px #000;
+    }
+    /* Updated h1 style for requested text */
+    header h1 {
+      font-style: italic;
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: 0.04em;
+      font-weight: 800;
+      color: #e0e0e0;
+      white-space: nowrap;
+      text-shadow:
+        -2px -2px 0 #000,
+        2px -2px 0 #000,
+        -2px 2px 0 #000,
+        2px 2px 0 #000,
+        0 0 8px #000;
+    }
+    @media (min-width: 640px) {
+      header h1 {
+        font-size: 2.75rem;
+      }
+    }
+    /* The single line bold note below h1 */
+    header p.note {
+      font-weight: 700;
+      font-size: 1.125rem; /* text-lg */
+      white-space: nowrap;
+      margin-top: 0.25rem;
+      color: #ccc;
+      text-shadow:
+        -2px -2px 0 #000,
+        2px -2px 0 #000,
+        -2px 2px 0 #000,
+        2px 2px 0 #000,
+        0 0 8px #000;
+    }
+    /* Footer style */
+    footer {
+      max-width: 80rem;
+      margin: 0 auto 1rem auto;
+      padding: 0.5rem 1rem;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: #ccc;
+      user-select: none;
+      font-style: italic;
+      text-shadow:
+        -2px -2px 0 #000,
+        2px -2px 0 #000,
+        -2px 2px 0 #000,
+        2px 2px 0 #000,
+        0 0 8px #000;
+      flex-shrink: 0;
+    }
+    /* Contact button style */
+    #contactButton {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background-color: #000000;
+      color: #10b981; /* Tailwind emerald-500 */
+      width: 4.5rem;
+      height: 4.5rem;
+      border-radius: 9999px;
+      box-shadow: 0 0 15px #10b981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 2.5rem;
+      cursor: pointer;
+      text-decoration: none;
+      border: 2px solid transparent;
+      transition: box-shadow 0.3s, border-color 0.3s, background-color 0.3s;
+      z-index: 10000;
+      user-select: none;
+      text-shadow:
+        -2px -2px 0 #000,
+        2px -2px 0 #000,
+        -2px 2px 0 #000,
+        2px 2px 0 #000,
+        0 0 8px #000;
+    }
+    #contactButton:hover, #contactButton:focus {
+      box-shadow: 0 0 25px #34d399;
+      border-color: #34d399;
+      background-color: #111111;
+      outline: none;
+    }
+    .dark section {
+      background-color: #111111;
+      border-color: #444;
+      box-shadow: 0 0 10px #34d399;
+      color: #d1fae5;
+    }
+    .dark footer {
+      background-color: #111111;
+      color: #bbb;
+      border-color: #444;
+    }
+  </style>
+</head>
+<body class="bg-black text-gray-200 min-h-screen transition-colors duration-300">
+  <button id="toggleThemeBtn" aria-label="Chuyển đổi chế độ sáng/tối" title="Chuyển đổi chế độ sáng/tối">
+    <i class="fas fa-cog"></i>
+  </button>
+  <button id="musicBtn" aria-label="Phát / Tạm dừng nhạc" title="Phát / Tạm dừng nhạc" type="button" aria-pressed="false" role="button">
+    🎵
+  </button>
+
+  <div id="fpsCounter" aria-live="polite" aria-atomic="true" role="status">FPS:85 --</div>
+
+  <div id="fallingIcons" aria-hidden="true"></div>
+
+  <header class="max-w-5xl mx-auto px-4 py-8 text-center">
+    <h1>Cày Thuê - Robux 120h - Gamepass - Buff DVMXH ✅</h1>
+    <p class="note">Mọi Thắc Mắc Liên Hệ Trực Tiếp Cho Admin Ng Đức Đề Thương Lượng !!</p>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 pb-16 space-y-10">
+    <!-- Section: Cày Beli -->
+    <section class="rounded-lg p-6 shadow-sm">
+      <div class="glow-triangle"></div>
+      <div class="glow-square"></div>
+      <div class="glow-circle"></div>
+      <h2 class="border-b border-gray-600 pb-2">Cày Beli</h2>
+      <div class="flex justify-between items-center">
+        <p class="text-lg font-medium">10.000 VNĐ = 5m Beli</p>
+      </div>
+    </section>
+
+    <!-- Section: Cày Mastery -->
+    <section class="rounded-lg p-6 shadow-sm">
+      <div class="glow-triangle"></div>
+      <div class="glow-square"></div>
+      <div class="glow-circle"></div>
+      <h2 class="border-b border-gray-600 pb-2">Cày Mastery</h2>
+
+      <div class="mb-6">
+        <h3 class="text-xl font-semibold mb-2">Melee:</h3>
+        <div class="space-y-2">
+          <div class="flex justify-between border-b border-gray-700 pb-1">
+            <p>1–350</p>
+            <p>10.000 VNĐ</p>
+          </div>
+          <div class="flex justify-between border-b border-gray-700 pb-1">
+            <p>1–600</p>
+            <p>20.000 VNĐ</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <h3 class="text-xl font-semibold mb-2">Sword:</h3>
+        <div class="space-y-2">
+          <div class="flex justify-between border-b border-gray-700 pb-1">
+            <p>1–350mas</p>
+            <p>10.000 VNĐ</p>
+          </div>
+          <div class="flex justify-between border-b border-gray-700 pb-1">
+            <p>1–600mas</p>
+            <p>20.000 VNĐ</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-xl font-semibold mb-2">Demon Fruit:</h3>
+        <div class="space-y-2">
+          <div class="flex justify-between border-b border-gray-700 pb-1">
+            <p>1–350 mas</p>
+            <p>10.000 VNĐ</p>
+          </div>
+          <div class="flex justify-between border-b border-gray-700 pb-1">
+            <p>1–600 mas</p>
+            <p>20.000 VNĐ</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Cày Fragment -->
+    <section class="rounded-lg p-6 shadow-sm">
+      <div class="glow-triangle"></div>
+      <div class="glow-square"></div>
+      <div class="glow-circle"></div>
+      <h2 class="border-b border-gray-600 pb-2">Cày Fragment</h2>
+      <div class="space-y-2">
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>5.000 F</p>
+          <p>10.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>10.000 F</p>
+          <p>20.000 VNĐ</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Lấy Kiếm & Melee -->
+    <section class="rounded-lg p-6 shadow-sm">
+      <div class="glow-triangle"></div>
+      <div class="glow-square"></div>
+      <div class="glow-circle"></div>
+      <h2 class="border-b border-gray-600 pb-2">Lấy Kiếm &amp; Melee</h2>
+      <div class="space-y-2">
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Thông thạo (600mas)</p>
+          <p>20.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Shisui, Wando, Saddi (Thông Thạo + Rap 3 Thanh)</p>
+          <p>30.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Shisui, Wando, Saddi :40.000 VNĐ</p>
+          <p></p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Pole V2</p>
+          <p>20.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Rengoku</p>
+          <p>20.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Yoru Mini</p>
+          <p>40.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Tushita</p>
+          <p>20.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Cavader</p>
+          <p>20.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Enma</p>
+          <p>30.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between">
+          <p>Lưỡi Hái Bóng Tối</p>
+          <p>40.000 VNĐ</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Tộc Rồng + V4 -->
+    <section class="rounded-lg p-6 shadow-sm">
+      <div class="glow-triangle"></div>
+      <div class="glow-square"></div>
+      <div class="glow-circle"></div>
+      <h2 class="border-b border-gray-600 pb-2">Tộc Rồng + V4</h2>
+      <div class="space-y-2">
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Gạt Cần (Có sẵn Tộc V3)</p>
+          <p>10.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Mảnh rương (đánh katav2 lấy mảnh gương)</p>
+          <p>20.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Tộc V4 1 Gear (Đã có Tộc V3, đã gạt cần)</p>
+          <p>10.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Up Tộc V4 Full 5 Gear (Đã có Tộc V3, đã gạt cần, có Mảnh Gương và Mảnh Mũ)</p>
+          <p>50.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Combo: Up Tộc V4 Full gear + Gạt Cần (Bao gồm Up Tộc V4 Full 5 Gear và Gạt Cần) Chưa Tính F</p>
+          <p>60.000 VNĐ</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Dịch Vụ Liên Quan -->
+    <section class="rounded-lg p-6 shadow-sm">
+      <div class="glow-triangle"></div>
+      <div class="glow-square"></div>
+      <div class="glow-circle"></div>
+      <h2 class="border-b border-gray-600 pb-2">Dịch Vụ Liên Quan</h2>
+      <div class="space-y-2">
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Lấy Súng Rồng (Dragon Storm)</p>
+          <p>40.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Lấy Kiếm Rồng (Dragon Heart)</p>
+          <p>30.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Lấy Full Đai</p>
+          <p>50.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Lấy Tộc Rồng 1-3 (Đã Lấy Súng + Kiếm + Trứng Và 8 Đai)</p>
+          <p>40.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Levi</p>
+          <p>100.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between border-b border-gray-700 pb-1">
+          <p>Lấy Tộc Tộc Quỷ</p>
+          <p>20.000 VNĐ</p>
+        </div>
+        <div class="flex justify-between">
+          <p>Lấy Tộc Tộc Người Máy (Chưa Tính Tiền F)</p>
+          <p>40.000 VNĐ</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div id="visitorUptime" aria-live="polite" aria-atomic="true" role="contentinfo">
+      <span id="visitorCount">Lượt truy cập: 0</span>
+      <span id="uptime">Thời gian chạy: 00:00:00</span>
+    </div>
+    <div style="font-size: 0.875rem; font-style: italic; color: #ccc; margin-top: 0.5rem;">
+      Copyright ©ByNgĐức - Cảm Ơn Đã Sử Dụng Dịch Vụ ❤️🌸✅
+    </div>
+  </footer>
+
+  <a href="http://zalo.me/0989925208" target="_blank" rel="noopener noreferrer" id="contactButton" aria-label="Liên hệ Zalo" title="Liên hệ Zalo">
+    📲
+  </a>
+
+  <audio id="audioPlayer" src="https://files.catbox.moe/b15lkq.mp3" preload="auto"></audio>
+
+  <script>
+    (() => {
+      const icons = ['❄️','✅','🌸','😝','🍕','🥖','🍠','🍪','🧊','🌼','🍂','🍁','🍃'];
+      const container = document.getElementById('fallingIcons');
+      const maxIcons = 25; // fewer icons
+
+      function random(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      function createIcon(index) {
+        const span = document.createElement('span');
+        span.classList.add('falling-icon');
+        span.style.left = `${random(0, 100)}vw`;
+        // Faster fall: duration between 5s and 9s (was 8-15)
+        span.style.animationDuration = `${random(5, 9)}s`;
+        span.style.animationDelay = `${random(0, 9)}s`;
+        span.style.zIndex = 9998;
+        span.textContent = icons[index % icons.length];
+        return span;
+      }
+
+      for(let i=0; i<maxIcons; i++) {
+        const icon = createIcon(i);
+        container.appendChild(icon);
+      }
+
+      // Theme toggle
+      const toggleBtn = document.getElementById('toggleThemeBtn');
+      const htmlEl = document.documentElement;
+
+      // Load saved theme from localStorage
+      if(localStorage.getItem('theme') === 'dark') {
+        htmlEl.classList.add('dark');
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        htmlEl.classList.toggle('dark');
+        if(htmlEl.classList.contains('dark')) {
+          localStorage.setItem('theme', 'dark');
+        } else {
+          localStorage.setItem('theme', 'light');
+        }
+      });
+
+      // Music button toggle
+      const musicBtn = document.getElementById('musicBtn');
+      const audioPlayer = document.getElementById('audioPlayer');
+
+      musicBtn.addEventListener('click', () => {
+        if (audioPlayer.paused) {
+          audioPlayer.play();
+          musicBtn.classList.add('playing');
+          musicBtn.setAttribute('aria-pressed', 'true');
+        } else {
+          audioPlayer.pause();
+          musicBtn.classList.remove('playing');
+          musicBtn.setAttribute('aria-pressed', 'false');
+        }
+      });
+
+      // Pause audio when page unloads
+      window.addEventListener('beforeunload', () => {
+        audioPlayer.pause();
+      });
+
+      // Visitor count and uptime
+      const visitorCountEl = document.getElementById('visitorCount');
+      const uptimeEl = document.getElementById('uptime');
+
+      // Visitor count stored in localStorage
+      let visitorCount = localStorage.getItem('visitorCount');
+      if (!visitorCount) {
+        visitorCount = 0;
+      }
+      visitorCount = parseInt(visitorCount, 10) + 1;
+      localStorage.setItem('visitorCount', visitorCount);
+      visitorCountEl.textContent = `Lượt truy cập: ${visitorCount.toLocaleString()}`;
+
+      // Uptime calculation
+      let startTime = localStorage.getItem('startTime');
+      if (!startTime) {
+        startTime = Date.now();
+        localStorage.setItem('startTime', startTime);
+      } else {
+        startTime = parseInt(startTime, 10);
+      }
+
+      function formatDuration(ms) {
+        const totalSeconds = Math.floor(ms / 1000);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        return [
+          hours.toString().padStart(2, '0'),
+          minutes.toString().padStart(2, '0'),
+          seconds.toString().padStart(2, '0')
+        ].join(':');
+      }
+
+      function updateUptime() {
+        const now = Date.now();
+        const diff = now - startTime;
+        uptimeEl.textContent = `Thời gian chạy: ${formatDuration(diff)}`;
+      }
+
+      updateUptime();
+      setInterval(updateUptime, 1000);
+    })();
+  </script>
+</body>
+</html>
